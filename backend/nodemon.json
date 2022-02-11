@@ -1,0 +1,10 @@
+{
+    "env": {
+      "DB_NAME": "CPDB",
+      "DB_USER": "CPadmin",
+      "DB_PASSWORD": "Miki@12345",
+      "PORTNUM": "4000",
+      "API_KEY" : "..."
+    }
+  }
+  

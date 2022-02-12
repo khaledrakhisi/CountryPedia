@@ -1,4 +1,9 @@
 const express = require("express");
+const schema = require("./schemas/schema");
+var { graphqlHTTP } = require("express-graphql");
+const axios = require("axios");
+
+const { getCountryByName } = require("./resolvers/country-resolvers");
 
 const app = express();
 const PORT = process.env.PORTNUM;
@@ -25,9 +30,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// API Routes
-app.use("/api/works", worksRouter);
-app.use("/api/resume", resumeRouter);
+// Root resolver
+var root = {
+  // updateCourseTopic: updateCourseTopic
+  getCountryByName: getCountryByName,
+};
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
 
 app.listen(PORT, (err) => {
   if (err) console.log("Error: cannot start the server.");

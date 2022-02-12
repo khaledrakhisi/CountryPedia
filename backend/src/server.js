@@ -1,16 +1,11 @@
 const express = require("express");
 const schema = require("./schemas/schema");
 var { graphqlHTTP } = require("express-graphql");
-const axios = require("axios");
 
 const { getCountryByName } = require("./resolvers/country-resolvers");
 
 const app = express();
 const PORT = process.env.PORTNUM;
-const DB_USER = process.env.DB_USER;
-const DB_PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
-const DB_NAME = process.env.DB_NAME;
-//const DB_URL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster1.twxfq.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
 // To recognize the incoming Request Object as a JSON Object
 app.use(express.json());
@@ -33,7 +28,7 @@ app.use((req, res, next) => {
 // Root resolver
 var root = {
   // updateCourseTopic: updateCourseTopic
-  getCountryByName: getCountryByName,
+  getCountryByName,
 };
 
 app.use(

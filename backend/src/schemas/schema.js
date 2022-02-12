@@ -14,7 +14,7 @@ var schema = buildSchema(`
     }
     type Currency {
         name: String!
-        Abbreviation: String!
+        symbol: String!
         exchangeRateToSEK: Int!
     }
 `);

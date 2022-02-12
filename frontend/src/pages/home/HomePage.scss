@@ -1,0 +1,43 @@
+.home-page{
+
+    width: 90vw;
+    min-height: 70vh;
+    // background-color: coral;
+    
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    .settings{
+
+    }
+
+    .logo{
+        // background-color: deeppink;
+        width: 250px;
+        height: 150px;
+        margin: 20px auto;
+    }
+    .search-area{
+        // background-color: darkblue;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .text-box{
+            width: 60%;
+            margin: 0 15px 0 0;
+        }
+        .add-button{
+            min-width: 27%;
+        }
+    }
+    .country-list{
+        display: flex;
+        flex-direction: column;
+
+        padding: 5px;
+    }
+}

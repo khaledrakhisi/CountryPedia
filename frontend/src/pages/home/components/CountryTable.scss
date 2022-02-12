@@ -1,0 +1,47 @@
+.country-table {
+  .country-table-header {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 40px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-bottom: 5px;
+
+    .flag {
+        width: 40px;
+        height: 40px;
+      }
+    
+      .full-name {
+        width: 30%;
+      }
+    
+      .population {
+      }
+    
+      .currencies {
+        
+      }
+  }
+
+  .country-table-seperator-solid {
+    border: 1px solid #000;
+    border-color: #8e8e8e8e;
+
+    width: 100%;
+
+    margin: 10px auto;
+  }
+  .country-table-seperator-dotted {
+    border-bottom: 2px dotted #8e8e8e;
+    border-color: #aca9a98e;
+
+    width: 95%;
+
+    margin: 5px auto;
+  }
+}

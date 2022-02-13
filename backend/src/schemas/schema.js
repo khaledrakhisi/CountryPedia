@@ -10,7 +10,7 @@ var schema = buildSchema(`
         id: Int!
         fullName: String!
         population: Int!
-        currencies: [Currency]
+        currencies: [Currency]        
     }
     type Currency {
         name: String!

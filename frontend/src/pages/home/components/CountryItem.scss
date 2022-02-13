@@ -31,5 +31,16 @@
   .currencies {
     display: flex;
     flex-direction: column;
+
+    .currency{
+        display: flex;
+        
+        .currency-code{
+            width: 30px;
+        }
+        .currency-name{
+            width: 30px;
+        }
+    }    
   }
 }

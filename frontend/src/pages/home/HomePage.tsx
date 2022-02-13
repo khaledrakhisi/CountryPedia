@@ -12,8 +12,9 @@ import CountryTable from "./components/CountryTable";
 import "./HomePage.scss";
 
 interface IState {
-  countryName: string;
-  countries: Array<Country>;
+  countryName: string,
+  countries: Array<Country>,
+  amount: number,
 }
 
 const GET_COUNTRIES_BY_NAME = gql`
@@ -22,6 +23,7 @@ const GET_COUNTRIES_BY_NAME = gql`
       id
       fullName
       population
+      flagUrl
       currencies {
         name
         symbol
@@ -33,10 +35,29 @@ const GET_COUNTRIES_BY_NAME = gql`
 `;
 
 const HomePage: React.FunctionComponent = () => {
+  
   const [state, setState] = useState<IState>({
     countryName: "",
     countries: [],
+    amount: 1,
   });
+
+  const [fetchCountries, { error, loading }] = useLazyQuery(
+    GET_COUNTRIES_BY_NAME,
+    {
+      onCompleted: (data) => {
+        // console.log(data);
+        
+        if(data.getCountryByName)
+          setState((prev) => {
+            return {
+              ...state,
+              countries: [...prev.countries, ...data.getCountryByName],
+            };
+          });
+      },
+    }
+  );
 
   const eh_inputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.currentTarget;
@@ -47,25 +68,7 @@ const HomePage: React.FunctionComponent = () => {
     });
   };
 
-  const [fetchCountries, { error, loading }] = useLazyQuery(
-    GET_COUNTRIES_BY_NAME,
-    {
-      onCompleted: (data) => {
-        console.log(data);
-
-        setState((prev) => {
-          return {
-            ...state,
-            countries: [...prev.countries, ...data.getCountryByName],
-          };
-        });
-      },
-    }
-  );
-
-  const eh_submit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     fetchCountries({ variables: { name: state.countryName } });
@@ -80,29 +83,75 @@ const HomePage: React.FunctionComponent = () => {
     }
   };
 
+  const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    // console.log("hereee");
+    
+    let updatedCountries = state.countries.map((country) => {      
+         return { 
+           ...country, 
+           currencies: country.currencies.map((currency)=>{
+             return {
+               ...currency,
+               exchange: state.amount * currency.exchangeRateToSEK,
+             }
+           }), 
+          };
+      }
+   );
+
+  //  console.log(updatedCountries);
+   
+   // update the state
+   setState({
+     ...state,
+     countries : updatedCountries,
+   });
+  };
+
   return (
     <div className="home-page">
       <div className="logo">LOGO</div>
-      <form onSubmit={eh_submit}>
-        <div className="search-area">
-          <div className="text-box">
-            <FormInput
-              id="country_search"
-              label="Enter the country name"
-              type="text"
-              value={state.countryName}
-              name="countryName"
-              onChange={eh_inputChange}
-            />
-          </div>
-          <div className="add-button">
-            <Button id="add" isBlueStyle>
-              add
-            </Button>
-          </div>
+
+      <form className="search-form" onSubmit={eh_searchSubmit}>
+
+        <div className="text-box">
+          <FormInput
+            id="country_search"
+            label="Enter the country name"
+            type="text"
+            value={state.countryName}
+            name="countryName"
+            onChange={eh_inputChange}
+          />
+        </div>
+
+        <div className="button">
+          <Button id="add" isBlueStyle>
+            add
+          </Button>
         </div>
       </form>
-      <CountryTable countries={state.countries} />
+
+      <form className="search-form" onSubmit={eh_calculateSubmit}>
+      <div className="text-box">
+        <FormInput
+            id="currency_amount"
+            label="SEK amount"
+            type="number"
+            value={state.amount.toString()}
+            name="amount"
+            onChange={eh_inputChange}
+          />
+          </div>
+          <div className="button">
+          <Button id="add">
+            calc
+          </Button>
+        </div>
+        </form>
+      <CountryTable countries={state.countries} exchangeAmount={state.amount}/>
     </div>
   );
 };

@@ -13,6 +13,7 @@ const countries: Array<Country> = [
                 name: "1",
                 symbol: "1",
                 exchangeRateToSEK: 1,
+                exchange: 0,
             }
         ],
     },
@@ -28,12 +29,14 @@ const countries: Array<Country> = [
                 name: "2",
                 symbol: "2",
                 exchangeRateToSEK: 2,
+                exchange: 0,
             },
             {
                 code: "22",
                 name: "22",
                 symbol: "22",
                 exchangeRateToSEK: 22,
+                exchange: 0,
             }
         ],
     }

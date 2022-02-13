@@ -10,7 +10,8 @@ var schema = buildSchema(`
         id: Int!
         fullName: String!
         population: Int!
-        currencies: [Currency]        
+        currencies: [Currency]
+        flagUrl: String
     }
     type Currency {
         name: String!
@@ -19,10 +20,5 @@ var schema = buildSchema(`
         exchangeRateToSEK: Float
     }
 `);
-
-// type Mutation {
-    //     updateCourseTopic(id: Int!, topic: String!): Course
-    // }
-
 
 module.exports = schema;

@@ -6,7 +6,7 @@ const exchangeRate = async (baseCurrency, distCurrency) => {
       `https://freecurrencyapi.net/api/v2/latest?apikey=270ae3c0-8c0a-11ec-939f-8b032014e114&base_currency=${baseCurrency}`
     );
 
-    console.log((response.data.data[distCurrency]));
+    console.log(response.data.data[distCurrency]);
     return response.data.data[distCurrency];
   } catch (err) {
     console.error(err);
@@ -15,6 +15,5 @@ const exchangeRate = async (baseCurrency, distCurrency) => {
 };
 
 module.exports = {
-    exchangeRate,
-
-}
+  exchangeRate,
+};

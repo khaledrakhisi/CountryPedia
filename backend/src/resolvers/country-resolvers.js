@@ -26,6 +26,7 @@ const getCountryByName = async (args) => {
         fullName: element.name.official,
         population: element.population,
         currencies,
+        flagUrl: element.flags.png,
       });
     });
 

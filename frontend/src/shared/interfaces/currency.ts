@@ -3,4 +3,5 @@ export default interface Currency {
     code: string,
     symbol: string,
     exchangeRateToSEK: number,
+    exchange: number,
 }

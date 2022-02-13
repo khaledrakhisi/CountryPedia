@@ -15,24 +15,29 @@
 
     .logo{
         // background-color: deeppink;
-        width: 250px;
-        height: 150px;
+        width: 200px;
+        height: 100px;
         margin: 20px auto;
     }
-    .search-area{
+    .search-form{
         // background-color: darkblue;
         height: 70px;
         display: flex;
         justify-content: center;
         align-items: center;
+        margin :0;
 
         .text-box{
             width: 60%;
             margin: 0 15px 0 0;
         }
-        .add-button{
+        .button{
             min-width: 27%;
-        }
+        }        
+    }
+    .amount{        
+        width: 50%;
+        margin: 0 auto 5px;
     }
     .country-list{
         display: flex;

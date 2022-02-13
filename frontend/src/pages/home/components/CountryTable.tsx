@@ -6,29 +6,31 @@ import CountryItem from "./CountryItem";
 import "./CountryTable.scss";
 
 interface IProps {
-  countries: Array<Country>;
+  countries: Array<Country>,
+  exchangeAmount: number,
 }
 
-const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
+const CountryTable: React.FunctionComponent<IProps> = ({ countries, exchangeAmount }) => {
     console.log(countries);
     
   return (
     <div className="country-table">
       <div className="country-table-header">
-        <div className="flag">Flag</div>
-        <div className="full-name">FullName</div>
-        <div className="population">Population</div>
-        <div className="currencies">Currencies</div>
+        <div className="flag">Fl.</div>
+        <div className="full-name">Full name</div>
+        <div className="population">Pop.</div>
+        <div className="currencies">Cur./Exch.</div>
+        {/* <div className="exchange">Exch.</div> */}
       </div>
       <div className="country-table-seperator-solid" />
       {countries.map((country, i) => {
         return i < countries.length - 1 ? (
-          <React.Fragment key={country.id}>
-            <CountryItem {...country} />
+          <React.Fragment key={i}>
+            <CountryItem {...country} exchangeAmount={1}/>
             <div className="country-table-seperator-dotted" />
           </React.Fragment>
         ) : (
-          <CountryItem key={country.id} {...country} />
+          <CountryItem key={i} {...country} exchangeAmount={exchangeAmount}/>
         );
       })}
     </div>

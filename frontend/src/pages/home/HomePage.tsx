@@ -42,7 +42,7 @@ const HomePage: React.FunctionComponent = () => {
     amount: 1,
   });
 
-  // Fetching graphql data using useLazyQuery hook.😊
+  // Fetching graphql data using useLazyQuery hook.
   const [fetchCountries, { error, loading }] = useLazyQuery(
     GET_COUNTRIES_BY_NAME,
     {
@@ -173,7 +173,7 @@ const HomePage: React.FunctionComponent = () => {
         </div>
 
         <div className="button">
-          <Button id="add">calc</Button>
+          <Button id="add" inverted>calc</Button>
         </div>
       </form>
       <CountryTable countries={state.countries} />

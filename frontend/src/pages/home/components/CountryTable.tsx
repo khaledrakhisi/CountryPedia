@@ -14,7 +14,7 @@ const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
     <div className="country-table">
 
       <div className="country-table-header">
-        <div className="flag"></div>
+        <div className="flag">Flag</div>
         <div className="full-name">Full name</div>
         <div className="population">Pop.</div>
         <div className="currencies">Cur. / Rate</div>
@@ -32,7 +32,7 @@ const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
           <CountryItem key={i} {...country} />
         );
       })}
-      
+
     </div>
   );
 };

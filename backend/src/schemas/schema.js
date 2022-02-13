@@ -4,7 +4,15 @@ var {buildSchema} = require('graphql');
 var schema = buildSchema(`
     type Query {
         getCountryByName(name: String): [Country]
-    }    
+        login(email: String, password: String): String
+    }
+
+    type User{
+        id: ID!
+        email: String!
+        token: String!
+        userName: String!        
+    }
     
     type Country {
         id: Int!

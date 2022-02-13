@@ -5,11 +5,9 @@ import abbreviateNumber from "../../../utils/utils";
 
 import "./CountryItem.scss";
 
-interface IProps extends Country{
-  exchangeAmount: number, 
-}
+interface IProps extends Country {}
 
-const CountryItem: React.FunctionComponent<IProps> = ({flagUrl, fullName, population, currencies, exchangeAmount}) => {
+const CountryItem: React.FunctionComponent<IProps> = ({flagUrl, fullName, population, currencies}) => {
   return (
     <div className="country-item">
       <div
@@ -24,13 +22,15 @@ const CountryItem: React.FunctionComponent<IProps> = ({flagUrl, fullName, popula
         {currencies.map((currency, i) => {
           return (
             <div className="currency" key={i}>
-              <div className="currency-code">{currency.code}/{currency.exchange}</div>
-              {/* <div className="currency-exchange"></div> */}
+              <div className="currency-code">
+                {currency.code} /{" "}
+                {currency.exchange ? currency.exchange.toFixed(2) : 0.0}
+              </div>
+              {/* <div className="currency-exchange">{currency.exchange}</div> */}
             </div>
           );
         })}
       </div>
-      {/* <div className="exchange">{exchanged}</div> */}
     </div>
   );
 };

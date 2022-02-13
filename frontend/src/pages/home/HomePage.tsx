@@ -4,6 +4,7 @@ import { useLazyQuery } from "react-apollo";
 
 import Button from "../../shared/components/UIElements/Button";
 import FormInput from "../../shared/components/UIElements/FormInput";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 // import countries from "../../shared/data/countries";
 import { Country } from "../../shared/interfaces/country";
@@ -12,9 +13,9 @@ import CountryTable from "./components/CountryTable";
 import "./HomePage.scss";
 
 interface IState {
-  countryName: string,
-  countries: Array<Country>,
-  amount: number,
+  countryName: string;
+  countries: Array<Country>;
+  amount: number;
 }
 
 const GET_COUNTRIES_BY_NAME = gql`
@@ -35,32 +36,67 @@ const GET_COUNTRIES_BY_NAME = gql`
 `;
 
 const HomePage: React.FunctionComponent = () => {
-  
   const [state, setState] = useState<IState>({
     countryName: "",
     countries: [],
     amount: 1,
   });
 
+  // Fetching graphql data using useLazyQuery hook.😊
   const [fetchCountries, { error, loading }] = useLazyQuery(
     GET_COUNTRIES_BY_NAME,
     {
       onCompleted: (data) => {
-        // console.log(data);
-        
-        if(data.getCountryByName)
+        let newCountries: Array<Country> = data.getCountryByName;
+
+        // Add new Counties
+        if (newCountries) {
+          // Calculating SEK exchange once item is being added
+          newCountries = calculateExchangeToSEK(newCountries, state.amount);
+
           setState((prev) => {
             return {
               ...state,
-              countries: [...prev.countries, ...data.getCountryByName],
+              // Appending new items in the array using js spread operator
+              countries: [...prev.countries, ...newCountries],
             };
           });
+        }
       },
     }
   );
 
+  const calculateExchangeToSEK = (items: Array<Country>, rateAmount: number) => {
+    // Mutating all exchange rate currencies using nested .map()
+    let updatedItems = items.map((item) => {
+      return {
+        ...item,
+        currencies: item.currencies.map((currency) => {
+          return {
+            ...currency,
+            exchange: rateAmount * currency.exchangeRateToSEK,
+          };
+        }),
+      };
+    });
+
+    return updatedItems;
+  };
+
   const eh_inputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.currentTarget;
+    
+    // if (name === "amount") {
+    //   console.log(name);
+    //   // Mutating all exchange rate currencies using nested .map()
+    //   const updatedCountries = calculateExchangeToSEK(state.countries, +value);
+
+    //   // update the state
+    //   setState({
+    //     ...state,
+    //     countries: updatedCountries,
+    //   });
+    // }
 
     setState({
       ...state,
@@ -86,36 +122,26 @@ const HomePage: React.FunctionComponent = () => {
   const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // console.log("hereee");
-    
-    let updatedCountries = state.countries.map((country) => {      
-         return { 
-           ...country, 
-           currencies: country.currencies.map((currency)=>{
-             return {
-               ...currency,
-               exchange: state.amount * currency.exchangeRateToSEK,
-             }
-           }), 
-          };
-      }
-   );
+    // Mutating all exchange rate currencies using nested .map()
+    const updatedCountries = calculateExchangeToSEK(
+      state.countries,
+      state.amount
+    );
 
-  //  console.log(updatedCountries);
-   
-   // update the state
-   setState({
-     ...state,
-     countries : updatedCountries,
-   });
+    // update the state
+    setState({
+      ...state,
+      countries: updatedCountries,
+    });
   };
 
   return (
     <div className="home-page">
       <div className="logo">LOGO</div>
 
-      <form className="search-form" onSubmit={eh_searchSubmit}>
+      {loading && <LoadingSpinner asOverlay={true} />}
 
+      <form className="search-form" onSubmit={eh_searchSubmit}>
         <div className="text-box">
           <FormInput
             id="country_search"
@@ -135,8 +161,8 @@ const HomePage: React.FunctionComponent = () => {
       </form>
 
       <form className="search-form" onSubmit={eh_calculateSubmit}>
-      <div className="text-box">
-        <FormInput
+        <div className="text-box">
+          <FormInput
             id="currency_amount"
             label="SEK amount"
             type="number"
@@ -144,14 +170,13 @@ const HomePage: React.FunctionComponent = () => {
             name="amount"
             onChange={eh_inputChange}
           />
-          </div>
-          <div className="button">
-          <Button id="add">
-            calc
-          </Button>
         </div>
-        </form>
-      <CountryTable countries={state.countries} exchangeAmount={state.amount}/>
+
+        <div className="button">
+          <Button id="add">calc</Button>
+        </div>
+      </form>
+      <CountryTable countries={state.countries} />
     </div>
   );
 };

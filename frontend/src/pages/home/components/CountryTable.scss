@@ -1,7 +1,6 @@
 .country-table {
   .country-table-header {
     display: flex;
-    // justify-content: space-between;
 
     width: 100%;
     height: 40px;
@@ -12,23 +11,24 @@
     margin-bottom: 5px;
 
     .flag {
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-      }
-    
-      .full-name {
-        width: 30%;
-      }
-    
-      .population {
-        width: 25%;
-        
-      }
-    
-      .currencies {
-        width: 15%;
-      }
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .full-name {
+      width: 30%;
+      margin-right: 10px;
+    }
+
+    .population {
+      width: 15%;
+      margin-right: 10px;
+    }
+
+    .currencies {
+      width: 40%;
+    }
   }
 
   .country-table-seperator-solid {

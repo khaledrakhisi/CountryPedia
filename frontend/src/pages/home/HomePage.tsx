@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLazyQuery } from "react-apollo";
 import { Link, RouteComponentProps } from "react-router-dom";
+import Zoom from "@material-ui/core/Zoom";
 
 import Button from "../../shared/components/UIElements/Button";
 import FormInput from "../../shared/components/UIElements/FormInput";
@@ -22,7 +23,7 @@ interface IState {
 
 const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const [state, setState] = useState<IState>({
-    countryName: "",
+    countryName: "Sweden",
     countries: [],
     amount: 1,
   });
@@ -73,22 +74,22 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const eh_inputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.currentTarget;
 
-    // if (name === "amount") {
-    //   console.log(name);
-    //   // Mutating all exchange rate currencies using nested .map()
-    //   const updatedCountries = calculateExchangeToSEK(state.countries, +value);
+    if(name==="amount"){
+        // updating all exchange rate currencies using nested .map()
+      const updatedCountries = calculateExchangeToSEK(state.countries, +value);
 
-    //   // update the state
-    //   setState({
-    //     ...state,
-    //     countries: updatedCountries,
-    //   });
-    // }
-
-    setState({
+      // update the state
+      setState({
+        ...state,
+        [name]: +value,
+        countries: updatedCountries,
+      });
+    }else{
+      setState({
       ...state,
       [name]: value,
     });
+    }
   };
 
   const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -111,16 +112,11 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
     }
   };
 
-  const eh_calculateSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     // updating all exchange rate currencies using nested .map()
-    const updatedCountries = calculateExchangeToSEK(
-      state.countries,
-      state.amount
-    );
+    const updatedCountries = calculateExchangeToSEK(state.countries, state.amount);
 
     // update the state
     setState({
@@ -129,9 +125,6 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
     });
   };
 
-  // const eh_expand_button = () => {
-  //   setIsExpanded(true);
-  // };
   const eh_close_button = () => {
     setIsExpanded(false);
   };
@@ -148,22 +141,23 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       >
         <div className="message-box">
           <div className="text">
-            <p>Authentication needed!</p>
-            <p>You have to login first.</p>
+            <span>Authentication needed! You have to login first.</span>            
           </div>
           <div className="buttons">
             <Button id="btn_ok" onClick={eh_close_button}>
-              ok
+              Okay
             </Button>
           </div>
         </div>
       </Modal>
-
+      
+      <Zoom in={true}>
       <div className="logo">
         <span className="first-word">
           Country<span className="second-word">Pedia</span>
-        </span>{" "}
+        </span>
       </div>
+      </Zoom>
 
       <div className="options">
         {_authContext.loggedinUser ? (
@@ -196,14 +190,14 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
         </div>
 
         <div className="button">
-          <Button id="add" isBlueStyle>
+          <Button id="add" isBlueStyle disabled={!state.countryName}>
             add
           </Button>
         </div>
       </form>
 
       <form className="search-form" onSubmit={eh_calculateSubmit}>
-        <div className="text-box">
+        <div className="number-box">
           <FormInput
             id="txt_currency_amount"
             label="SEK amount"
@@ -212,12 +206,6 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
             name="amount"
             onChange={eh_inputChange}
           />
-        </div>
-
-        <div className="button">
-          <Button id="btn_add" inverted>
-            calc
-          </Button>
         </div>
       </form>
       <CountryTable countries={state.countries} />

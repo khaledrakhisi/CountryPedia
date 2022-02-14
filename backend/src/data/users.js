@@ -1,14 +1,14 @@
 const database_users = [
   {
     id: 1,
-    name: "khaled",
+    name: "khaled Rakhisi",
     email: "info@khaledr.ir",
     password: "123456",
     imageUrl: "",
   },
   {
     id: 2,
-    name: "paul",
+    name: "Paul Helsinki",
     email: "paul@khaledr.ir",
     password: "pppppp",
     imageUrl: "",

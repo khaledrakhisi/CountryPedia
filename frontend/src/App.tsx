@@ -4,9 +4,9 @@ import { useCallback, useState } from "react";
 import HomePage from './pages/home/HomePage';
 import SigninSignup from "./pages/sign-in-sign-up/SigninPage";
 import { AuthContext } from "./shared/context/Auth-context";
+import { IUser } from "./shared/interfaces/user";
 
 import "./App.css";
-import { IUser } from "./shared/interfaces/user";
 
 function App() {
 

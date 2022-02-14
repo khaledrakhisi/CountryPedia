@@ -25,8 +25,11 @@
       color: white;
 
       &:hover{
-        background-color: #357ae8;
+        background-color: #8db8fd;
         border: none;
+      }
+      &:active{
+        background-color: #16499b;
       }
     }
 
@@ -41,6 +44,16 @@
       }
       &:active{
         background-color: #000;
+      }
+    }
+
+    &.disabled{
+      color: #414040;
+      background-color: #b9b9b9;
+
+      &:hover{
+        background-color: #b9b9b9;
+        border: none;
       }
     }
     

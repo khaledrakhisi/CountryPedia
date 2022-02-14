@@ -10,6 +10,7 @@ interface IProps {
 }
 
 const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
+  const ITEM_DISPLAY_DELAY = 100;
   return (
     <div className="country-table">
 
@@ -25,11 +26,11 @@ const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
       {countries.map((country, i) => {
         return i < countries.length - 1 ? (
           <React.Fragment key={i}>
-            <CountryItem {...country} />
+            <CountryItem {...country} displayDelay={i*ITEM_DISPLAY_DELAY}/>
             <div className="country-table-seperator-dotted" />
           </React.Fragment>
         ) : (
-          <CountryItem key={i} {...country} />
+          <CountryItem key={i} {...country} displayDelay={i*ITEM_DISPLAY_DELAY}/>
         );
       })}
 

@@ -1,9 +1,9 @@
 const express = require("express");
-const schema = require("./schemas/schema");
 const { graphqlHTTP } = require("express-graphql");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 
+const schema = require("./schemas/schema");
 const { getCountryByName } = require("./resolvers/country-resolvers");
 const usersRouter = require("./routes/users-route");
 const HttpError = require("./models/http-error");
@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORTNUM;
 
 const apiLimiter = rateLimit({
-	windowMs: 1 * 60 * 1000, // 15 minutes
-	max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	windowMs: 1 * 60 * 1000, // 1 minutes
+	max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
@@ -28,11 +28,11 @@ app.use(cors());
 // Seperate login endpoint
 app.use("/login", usersRouter);
 
-// Apply the rate limiting middleware to API calls only
-app.use('/graphql', apiLimiter);
-
 // Authentication middleware
 app.use("/graphql", tokenMiddleware);
+
+// Apply the rate limiting middleware to API calls only
+app.use('/graphql', apiLimiter);
 
 // Root resolver
 var root = {

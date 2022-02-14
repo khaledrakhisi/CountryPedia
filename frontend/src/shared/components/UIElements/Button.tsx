@@ -8,11 +8,12 @@ interface IProps{
     onClick?: React.MouseEventHandler<HTMLButtonElement>,
     isBlueStyle?: boolean,
     inverted?: boolean,
+    disabled?: boolean,
 }
 
-const Button : React.FunctionComponent<IProps> = ({id, isBlueStyle, inverted, children, ...otherProps}) => {
+const Button : React.FunctionComponent<IProps> = ({id, disabled, isBlueStyle, inverted, children, ...otherProps}) => {
     return (
-        <button className= {`${inverted ? "inverted" : ""} ${isBlueStyle ? "blue-style" : ""} custom-button`} id={id} {...otherProps}>{children}</button>
+        <button disabled={disabled} className= {`${disabled ? "disabled" : ""} ${inverted ? "inverted" : ""} ${isBlueStyle ? "blue-style" : ""} custom-button`} id={id} {...otherProps}>{children}</button>
     );
 }
 

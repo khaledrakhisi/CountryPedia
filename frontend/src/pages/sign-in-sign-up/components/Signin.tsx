@@ -35,7 +35,6 @@ const Signin: React.FunctionComponent<IProps> = ({ history }) => {
     const response = await fetch(url, {
       method,
       mode: "cors",
-      // headers: { "Content-Type": "application/json" },
       headers: buildHeaders(token),
       body: JSON.stringify(params),
     });

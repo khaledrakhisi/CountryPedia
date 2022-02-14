@@ -22,9 +22,9 @@ var schema = buildSchema(`
         flagUrl: String
     }
     type Currency {
-        name: String!
-        code: String!
-        symbol: String!
+        name: String
+        code: String
+        symbol: String
         exchangeRateToSEK: Float
     }
 `);

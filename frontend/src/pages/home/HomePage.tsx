@@ -1,46 +1,33 @@
-import { gql } from "apollo-boost";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLazyQuery } from "react-apollo";
+import { RouteComponentProps } from "react-router-dom";
 
 import Button from "../../shared/components/UIElements/Button";
 import FormInput from "../../shared/components/UIElements/FormInput";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-
-// import countries from "../../shared/data/countries";
+import Modal from "../../shared/components/UIElements/Modal";
+import { AuthContext } from "../../shared/context/Auth-context";
+import { GET_COUNTRIES_BY_NAME } from "../../shared/graphql/queries";
 import { Country } from "../../shared/interfaces/country";
 import CountryTable from "./components/CountryTable";
 
 import "./HomePage.scss";
 
+interface IProps extends RouteComponentProps{}
 interface IState {
   countryName: string;
   countries: Array<Country>;
   amount: number;
 }
 
-const GET_COUNTRIES_BY_NAME = gql`
-  query getCountryByName($name: String!) {
-    getCountryByName(name: $name) {
-      id
-      fullName
-      population
-      flagUrl
-      currencies {
-        name
-        symbol
-        code
-        exchangeRateToSEK
-      }
-    }
-  }
-`;
-
-const HomePage: React.FunctionComponent = () => {
+const HomePage: React.FunctionComponent<IProps> = ({history}) => {
   const [state, setState] = useState<IState>({
     countryName: "",
     countries: [],
     amount: 1,
   });
+  const [isExpanded, setIsExpanded] = useState(false);
+  const _authContext = useContext(AuthContext);
 
   // Fetching graphql data using useLazyQuery hook.
   const [fetchCountries, { error, loading }] = useLazyQuery(
@@ -107,6 +94,11 @@ const HomePage: React.FunctionComponent = () => {
   const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
+    if(!_authContext.loggedinUser){
+      setIsExpanded(true);
+      return;
+    }
+
     fetchCountries({ variables: { name: state.countryName } });
 
     try {
@@ -122,7 +114,7 @@ const HomePage: React.FunctionComponent = () => {
   const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // Mutating all exchange rate currencies using nested .map()
+    // updating all exchange rate currencies using nested .map()
     const updatedCountries = calculateExchangeToSEK(
       state.countries,
       state.amount
@@ -135,16 +127,45 @@ const HomePage: React.FunctionComponent = () => {
     });
   };
 
+  // const eh_expand_button = () => {
+  //   setIsExpanded(true);
+  // };
+  const eh_close_button = () => {
+    setIsExpanded(false);
+  };
+
   return (
     <div className="home-page">
-      <div className="logo">LOGO</div>
 
+      <Modal
+        show={isExpanded}
+        OnCancelHandle={eh_close_button}
+        header="Login required!"
+        contentClass="modal_content"
+        footerClass="modal_actions"
+        // footer={<Button onClick={eh_close_button}>Close</Button>}
+      >
+        <div className="message-box">
+          <div className="text">
+            <p>Authentication needed!</p>
+            <p>You have to login first.</p>
+          </div>
+          <div className="buttons">
+            <Button id="btn_ok" onClick={eh_close_button}>ok</Button>            
+          </div>          
+        </div>
+      </Modal>
+
+
+      <div className="logo"><span className="first-word">Country<span className="second-word">Pedia</span></span> </div>
+   
       {loading && <LoadingSpinner asOverlay={true} />}
+      {error && <div>{error.message}</div>}
 
       <form className="search-form" onSubmit={eh_searchSubmit}>
         <div className="text-box">
           <FormInput
-            id="country_search"
+            id="txt_country_search"
             label="Enter the country name"
             type="text"
             value={state.countryName}
@@ -163,7 +184,7 @@ const HomePage: React.FunctionComponent = () => {
       <form className="search-form" onSubmit={eh_calculateSubmit}>
         <div className="text-box">
           <FormInput
-            id="currency_amount"
+            id="txt_currency_amount"
             label="SEK amount"
             type="number"
             value={state.amount.toString()}
@@ -173,7 +194,7 @@ const HomePage: React.FunctionComponent = () => {
         </div>
 
         <div className="button">
-          <Button id="add" inverted>calc</Button>
+          <Button id="btn_add" inverted>calc</Button>
         </div>
       </form>
       <CountryTable countries={state.countries} />

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLazyQuery } from "react-apollo";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Zoom from "@material-ui/core/Zoom";
@@ -74,8 +74,8 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const eh_inputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.currentTarget;
 
-    if(name==="amount"){
-        // updating all exchange rate currencies using nested .map()
+    if (name === "amount") {
+      // updating all exchange rate currencies using nested .map()
       const updatedCountries = calculateExchangeToSEK(state.countries, +value);
 
       // update the state
@@ -84,15 +84,18 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
         [name]: +value,
         countries: updatedCountries,
       });
-    }else{
+
+    } else {
       setState({
-      ...state,
-      [name]: value,
-    });
+        ...state,
+        [name]: value,
+      });
     }
   };
 
-  const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const eh_searchSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     if (!_authContext.loggedinUser) {
@@ -116,7 +119,10 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
     e.preventDefault();
 
     // updating all exchange rate currencies using nested .map()
-    const updatedCountries = calculateExchangeToSEK(state.countries, state.amount);
+    const updatedCountries = calculateExchangeToSEK(
+      state.countries,
+      state.amount
+    );
 
     // update the state
     setState({
@@ -141,7 +147,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       >
         <div className="message-box">
           <div className="text">
-            <span>Authentication needed! You have to login first.</span>            
+            <span>Authentication needed! You have to login first.</span>
           </div>
           <div className="buttons">
             <Button id="btn_ok" onClick={eh_close_button}>
@@ -150,13 +156,13 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
           </div>
         </div>
       </Modal>
-      
+
       <Zoom in={true}>
-      <div className="logo">
-        <span className="first-word">
-          Country<span className="second-word">Pedia</span>
-        </span>
-      </div>
+        <div className="logo">
+          <span className="first-word">
+            Country<span className="second-word">Pedia</span>
+          </span>
+        </div>
       </Zoom>
 
       <div className="options">
@@ -174,7 +180,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
         )}
       </div>
 
-      <div className="error-message">{error && <div>{error.message}</div>}</div>      
+      <div className="error-message">{error && <div>{error.message}</div>}</div>
 
       <form className="search-form" onSubmit={eh_searchSubmit}>
         {loading && <LoadingSpinner asOverlay={true} />}

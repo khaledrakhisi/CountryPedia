@@ -81,7 +81,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       // update the state
       setState({
         ...state,
-        [name]: +value,
+        amount: +value,
         countries: updatedCountries,
       });
 
@@ -93,9 +93,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
     }
   };
 
-  const eh_searchSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     if (!_authContext.loggedinUser) {
@@ -105,24 +103,17 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
 
     fetchCountries({ variables: { name: state.countryName } });
 
-    try {
-      setState({
-        ...state,
-        countryName: "",
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    setState({
+      ...state,
+      countryName: "",
+    });    
   };
 
   const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     // updating all exchange rate currencies using nested .map()
-    const updatedCountries = calculateExchangeToSEK(
-      state.countries,
-      state.amount
-    );
+    const updatedCountries = calculateExchangeToSEK(state.countries, state.amount);
 
     // update the state
     setState({
@@ -147,7 +138,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       >
         <div className="message-box">
           <div className="text">
-            <span>Authentication needed! You have to login first.</span>
+            <span>Deara user, Authentication needed! You have to login first.</span>
           </div>
           <div className="buttons">
             <Button id="btn_ok" onClick={eh_close_button}>
@@ -180,7 +171,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
         )}
       </div>
 
-      <div className="error-message">{error && <div>{error.message}</div>}</div>
+      <div className="error-message">{error && <div>{"No internet access or too many requests, " + error.message}</div>}</div>
 
       <form className="search-form" onSubmit={eh_searchSubmit}>
         {loading && <LoadingSpinner asOverlay={true} />}

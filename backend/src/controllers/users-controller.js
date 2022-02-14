@@ -51,7 +51,6 @@ const userLogin = async (req, res, next) => {
     return next(new HttpError("Error happend while creating the token.", 500));
   }
 
-  // console.log(token);
   res.status(200).json({
     id: user.id,
     name: user.name,

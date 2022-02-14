@@ -1,18 +1,42 @@
 const jwt = require("jsonwebtoken");
-
 const HttpError = require("../models/http-error");
 
-module.exports = (req, res, next) => {
+// JWT
+const expiresIn = "1h"; // time to live
+const SECRET_KEY = "secret_key"; // secret key
+const tokenPrefix = "JWT"; // Prefix for HTTP header
+
+const tokenMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1]; // Authorization: 'Bearer TOKEN'
-    if (!token) {
-      throw new Error("Access denied!");
+    const [prefix, payload] = req.headers["authorization"].split(" ");
+
+    if (!payload) {
+      //no token in the header
+      throw new HttpError("No token provided", 401);
     }
-    const decodedToken = jwt.verify(token, "secret_key");
-    req.userData = { userId: decodedToken.userId };
+    if (prefix !== tokenPrefix) {
+      //unexpected prefix or format
+      throw new HttpError("Invalid header format", 401);
+    }
+    const decodedToken = jwt.verify(payload, SECRET_KEY);
+    // req.userData = { userId: decodedToken.userId };
     next();
   } catch (err) {
-    const error = new HttpError("Access denied!", 401);
-    return next(error);
+    return next(new HttpError("Access denied!", 401));
   }
+};
+
+const createToken = (email) => {
+  const payload = {
+    email: email,
+  };
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn,
+  });
+  return token;
+};
+
+module.exports = {
+  tokenMiddleware,
+  createToken,
 };

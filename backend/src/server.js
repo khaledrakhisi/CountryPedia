@@ -1,14 +1,23 @@
 const express = require("express");
 const schema = require("./schemas/schema");
-var { graphqlHTTP } = require("express-graphql");
+const { graphqlHTTP } = require("express-graphql");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 const { getCountryByName } = require("./resolvers/country-resolvers");
 const usersRouter = require("./routes/users-route");
 const HttpError = require("./models/http-error");
+const { tokenMiddleware } = require("./middlewares/token-middleware");
 
 const app = express();
 const PORT = process.env.PORTNUM;
+
+const apiLimiter = rateLimit({
+	windowMs: 1 * 60 * 1000, // 15 minutes
+	max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 // To recognize the incoming Request Object as a JSON Object
 app.use(express.json());
@@ -16,27 +25,26 @@ app.use(express.json());
 // CORS Headers => Required for cross-origin/ cross-server communication
 app.use(cors());
 
-// CORS Headers => Required for cross-origin/ cross-server communication
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-  
-  next();
-});
+// Seperate login endpoint
+app.use("/login", usersRouter);
+
+// Apply the rate limiting middleware to API calls only
+app.use('/graphql', apiLimiter);
+
+// Authentication middleware
+app.use("/graphql", tokenMiddleware);
 
 // Root resolver
 var root = {
   getCountryByName,
 };
 
-app.use("/login", usersRouter);
-app.use("/graphql", graphqlHTTP({
-    schema: schema,
-    rootValue: root,
-    graphiql: true,
-  })
-);
+app.use('/graphql', graphqlHTTP((req, res) => ({
+  schema,
+  rootValue: root,
+  graphiql: true,
+})));
+
 app.use((req, res, next) => {
   throw new HttpError("Page not found.", 404);
 });

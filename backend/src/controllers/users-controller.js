@@ -1,18 +1,9 @@
 // const { v4: uuid_v4 } = require("uuid");
 const { validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
+const database_users = require("../data/users");
+const {createToken} = require("../middlewares/token-middleware");
 
 const HttpError = require("../models/http-error");
-
-const database_users = [
-  {
-    id: 1,
-    name: "khaled",
-    email: "info@khaledr.ir",
-    password: "123456",
-    imageUrl: "",    
-  }
-];
 
 const userLogin = async (req, res, next) => {
   const result = validationResult(req).formatWith(
@@ -33,16 +24,14 @@ const userLogin = async (req, res, next) => {
   }
 
   const { email, password } = req.body;
-  console.log(email);
+  // console.log(email);  
 
   let user = null;
   try {
-    user = database_users.find(user=>user.email===email);
+    user = database_users.find((user) => user.email === email);
   } catch (err) {
     console.log(err);
-    return next(
-      new HttpError("users: something's wrong!", 500)
-    );
+    return next(new HttpError("users: something's wrong!", 500));
   }
 
   if (!user || user.password !== password) {
@@ -55,25 +44,23 @@ const userLogin = async (req, res, next) => {
     );
   }
 
-  let token;
-  try{
-    token = jwt.sign({userId: user.id, email: user.email},"secret_key",{expiresIn: "1h"})
-  }catch(err){
-    return next(
-      new HttpError(
-        "Error happend while creating the token.",
-        500
-      )
-    );
+  let token = null;
+  try {
+    token = createToken(email);
+  } catch (err) {
+    return next(new HttpError("Error happend while creating the token.", 500));
   }
 
-  res.status(200).json({ 
-    id: user.id, 
-    name: user.name, 
-    imageUrl: user.imageUrl, 
-    email: user.email, 
-    token: token });
+  // console.log(token);
+  res.status(200).json({
+    id: user.id,
+    name: user.name,
+    imageUrl: user.imageUrl,
+    email: user.email,
+    token: token,
+  });
 };
 
-// exports.getUserById = getUserById;
-exports.userLogin = userLogin;
+module.exports = {
+  userLogin,
+}

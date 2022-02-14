@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useLazyQuery } from "react-apollo";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 
 import Button from "../../shared/components/UIElements/Button";
 import FormInput from "../../shared/components/UIElements/FormInput";
@@ -13,14 +13,14 @@ import CountryTable from "./components/CountryTable";
 
 import "./HomePage.scss";
 
-interface IProps extends RouteComponentProps{}
+interface IProps extends RouteComponentProps {}
 interface IState {
   countryName: string;
   countries: Array<Country>;
   amount: number;
 }
 
-const HomePage: React.FunctionComponent<IProps> = ({history}) => {
+const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const [state, setState] = useState<IState>({
     countryName: "",
     countries: [],
@@ -72,7 +72,7 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
 
   const eh_inputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.currentTarget;
-    
+
     // if (name === "amount") {
     //   console.log(name);
     //   // Mutating all exchange rate currencies using nested .map()
@@ -94,7 +94,7 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
   const eh_searchSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    if(!_authContext.loggedinUser){
+    if (!_authContext.loggedinUser) {
       setIsExpanded(true);
       return;
     }
@@ -111,7 +111,9 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
     }
   };
 
-  const eh_calculateSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const eh_calculateSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     // updating all exchange rate currencies using nested .map()
@@ -136,7 +138,6 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
 
   return (
     <div className="home-page">
-
       <Modal
         show={isExpanded}
         OnCancelHandle={eh_close_button}
@@ -151,18 +152,38 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
             <p>You have to login first.</p>
           </div>
           <div className="buttons">
-            <Button id="btn_ok" onClick={eh_close_button}>ok</Button>            
-          </div>          
+            <Button id="btn_ok" onClick={eh_close_button}>
+              ok
+            </Button>
+          </div>
         </div>
       </Modal>
 
+      <div className="logo">
+        <span className="first-word">
+          Country<span className="second-word">Pedia</span>
+        </span>{" "}
+      </div>
 
-      <div className="logo"><span className="first-word">Country<span className="second-word">Pedia</span></span> </div>
-   
-      {loading && <LoadingSpinner asOverlay={true} />}
-      {error && <div>{error.message}</div>}
+      <div className="options">
+        {_authContext.loggedinUser ? (
+          <div
+            className="login"
+            onClick={() => {
+              _authContext.logoff();
+            }}
+          >{`Signout ${_authContext.loggedinUser.name}`}</div>
+        ) : (
+          <Link className="login" to="/login">
+            Login
+          </Link>
+        )}
+      </div>
+
+      <div className="error-message">{error && <div>{error.message}</div>}</div>      
 
       <form className="search-form" onSubmit={eh_searchSubmit}>
+        {loading && <LoadingSpinner asOverlay={true} />}
         <div className="text-box">
           <FormInput
             id="txt_country_search"
@@ -194,7 +215,9 @@ const HomePage: React.FunctionComponent<IProps> = ({history}) => {
         </div>
 
         <div className="button">
-          <Button id="btn_add" inverted>calc</Button>
+          <Button id="btn_add" inverted>
+            calc
+          </Button>
         </div>
       </form>
       <CountryTable countries={state.countries} />

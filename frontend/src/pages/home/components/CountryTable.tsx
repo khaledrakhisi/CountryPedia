@@ -17,7 +17,7 @@ const CountryTable: React.FunctionComponent<IProps> = ({ countries }) => {
         <div className="flag">Flag</div>
         <div className="full-name">Full name</div>
         <div className="population">Pop.</div>
-        <div className="currencies">Cur. / Rate</div>
+        <div className="currencies">Cur.</div>
       </div>
 
       <div className="country-table-seperator-solid" />

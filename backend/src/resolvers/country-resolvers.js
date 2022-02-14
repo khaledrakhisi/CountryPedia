@@ -4,9 +4,7 @@ const { exchangeRate } = require("../util/exchangeRate");
 
 const getCountryByName = async (args) => {
   try {
-    const response = await axios.get(
-      `https://restcountries.com/v3.1/name/${args.name}`
-    );
+    const response = await axios.get(`https://restcountries.com/v3.1/name/${args.name}`);
 
     const countries = [];
 

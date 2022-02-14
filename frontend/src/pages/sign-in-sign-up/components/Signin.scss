@@ -11,6 +11,10 @@
     .buttons{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
+        .custom-button{
+            width: 150px;
+            margin-right: 10px;
+        }
     }
 }

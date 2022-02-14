@@ -23,10 +23,9 @@ const CountryItem: React.FunctionComponent<IProps> = ({flagUrl, fullName, popula
           return (
             <div className="currency" key={i}>
               <div className="currency-code">
-                {currency.code} /{" "}
-                {currency.exchange ? currency.exchange.toFixed(2) : 0.0}
+                {currency.code}
               </div>
-              {/* <div className="currency-exchange">{currency.exchange}</div> */}
+              <div className="currency-exchange">{currency.exchange ? currency.exchange.toFixed(2) : 0.0}</div>
             </div>
           );
         })}

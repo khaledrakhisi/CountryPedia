@@ -1,5 +1,4 @@
 .country-item {
-  //   background-color: aqua;
 
   &:hover{
     background-color: #c9c9c9;
@@ -7,7 +6,6 @@
   }
 
   display: flex;
-  // justify-content: space-between;
   align-items: center;
 
   width: 100%;
@@ -47,19 +45,21 @@
   .currencies {
     display: flex;
     flex-direction: column;    
-    width: 40%;    
+    width: 40%;
 
     .currency {
       display: flex;      
-      margin-bottom: 6px;      
+      margin-bottom: 6px;
 
       .currency-code {
-        width: 100%;        
-      }
-      // .currency-exchange {
-      //   width: 30px;
-      //   margin-left: auto;
-      // }
+        width: 40%;
+      }      
+      .currency-exchange {
+        width: 40%;
+      }      
     }
+  }
+  .exchange{
+    width:40%;
   }
 }

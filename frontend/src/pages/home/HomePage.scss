@@ -2,21 +2,15 @@
 
     width: 90vw;
     min-height: 70vh;
-    // background-color: coral;
     
     margin: 0 auto;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: column;    
 
-    .settings{
-
-    }
-
-    .logo{
-        // background-color: deeppink;
+    .logo{        
         width: 60%;
-        height: 150px;        
+        height: 120px;        
         margin: 5px auto;        
         
         font-family: 'Open Sans Condensed', sans-serif;
@@ -27,6 +21,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
         .first-word{
             
         }
@@ -35,8 +30,30 @@
             font-size: 3.5rem;
         }
     }
-    .search-form{
-        // background-color: darkblue;
+    .options{
+        display: flex;
+        justify-content: center;
+
+        width: 90%;
+        height: 30px;
+        margin: 10px auto 20px;
+        border-bottom: 1px dashed #8e8e8e;
+        border-radius: 10px;
+        .login{
+            &:hover{
+                color: #4285f4;
+                cursor: pointer;
+            }
+            
+        }
+    }
+    .error-message{
+        width: 80%;
+        margin: 0 auto 10px;
+        text-align: center;
+        color: red;
+    }
+    .search-form{        
         height: 70px;
         display: flex;
         justify-content: center;

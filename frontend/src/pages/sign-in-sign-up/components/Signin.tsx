@@ -5,6 +5,7 @@ import Button from "../../../shared/components/UIElements/Button";
 import FormInput from "../../../shared/components/UIElements/FormInput";
 import Modal from "../../../shared/components/UIElements/Modal";
 import { AuthContext } from "../../../shared/context/Auth-context";
+import sendAPIRequest from "../../../shared/graphql/sendAPIRequest";
 import { IUser } from "../../../shared/interfaces/user";
 
 import "./Signin.scss";
@@ -31,25 +32,6 @@ const Signin: React.FunctionComponent<IProps> = ({ history }) => {
       ...state,
       [name]: value,
     });
-  };
-
-  const sendAPIRequest = async (url: string, params = {}, method = "POST", token = false) => {
-    const response = await fetch(url, {
-      method,
-      mode: "cors",
-      headers: buildHeaders(token),
-      body: JSON.stringify(params),
-    });
-    return response.json();
-  };
-
-  const buildHeaders = (token = false): Headers => {
-    let headers = new Headers();
-    headers.append("Content-type", "application/json");
-    if (token) {
-      headers.append("authorization", `JWT ${token}`);
-    }
-    return headers;
   };
 
   const eh_submit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {

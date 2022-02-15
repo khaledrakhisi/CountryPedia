@@ -30,7 +30,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const _authContext = useContext(AuthContext);
 
-  // Fetching graphql data using useLazyQuery hook.
+  // Fetching graphql data using useLazyQuery hook
   const [fetchCountries, { error, loading }] = useLazyQuery(
     GET_COUNTRIES_BY_NAME,
     {
@@ -138,7 +138,7 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       >
         <div className="message-box">
           <div className="text">
-            <span>Deara user, Authentication needed! You have to login first.</span>
+            <span>Dear user, Authentication needed! You have to login first.</span>
           </div>
           <div className="buttons">
             <Button id="btn_ok" onClick={eh_close_button}>

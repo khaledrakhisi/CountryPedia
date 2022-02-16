@@ -54,8 +54,8 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
           // Sort countries
           let sortedCountries = [...state.countries, ...newCountries];
           sortedCountries = sortedCountries.sort((a, b) => {
-            let fa = a.fullName.toLowerCase(),
-                fb = b.fullName.toLowerCase();
+            let fa = a.name.toLowerCase(),
+                fb = b.name.toLowerCase();
         
             if (fa < fb) {
                 return -1;

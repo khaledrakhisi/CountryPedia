@@ -21,13 +21,22 @@ interface IState {
   amount: number;
 }
 
+interface IMessageBox{
+  title: string,
+  message: string,
+}
+
 const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
   const [state, setState] = useState<IState>({
     countryName: "Sweden",
     countries: [],
     amount: 1,
   });
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false); 
+  const [messagebox, setMessageBox] = useState<IMessageBox>({
+    title: "",
+    message: "",
+  });
   const _authContext = useContext(AuthContext);
 
   // Fetching graphql data using useLazyQuery hook
@@ -42,11 +51,26 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
           // Calculating SEK exchange once item is being added
           newCountries = calculateExchangeToSEK(newCountries, state.amount);
 
+          // Sort countries
+          let sortedCountries = [...state.countries, ...newCountries];
+          sortedCountries = sortedCountries.sort((a, b) => {
+            let fa = a.fullName.toLowerCase(),
+                fb = b.fullName.toLowerCase();
+        
+            if (fa < fb) {
+                return -1;
+            }
+            if (fa > fb) {
+                return 1;
+            }
+            return 0;
+          });
+
           setState((prev) => {
             return {
               ...state,
               // Appending new items in the array using js spread operator
-              countries: [...prev.countries, ...newCountries],
+              countries: sortedCountries,
             };
           });
         }
@@ -97,11 +121,26 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
     e.preventDefault();
 
     if (!_authContext.loggedinUser) {
+      setMessageBox({
+        title: "Login required!",
+        message: "Dear user, Authentication needed! You have to login first.",
+      })
       setIsExpanded(true);
       return;
     }
 
-    fetchCountries({ variables: { name: state.countryName } });
+    const countryExist: Country | undefined = state.countries.find(country=>country.name.toLowerCase()===state.countryName.toLowerCase());
+    if(countryExist){
+      // TODO: show a message
+      setMessageBox({
+        title: "New Country",
+        message: `Country '${countryExist.name}' is already exsist!`,
+      })
+      setIsExpanded(true);
+      return;
+    }
+
+    fetchCountries({ variables: { name: state.countryName } });    
 
     setState({
       ...state,
@@ -131,14 +170,14 @@ const HomePage: React.FunctionComponent<IProps> = ({ history }) => {
       <Modal
         show={isExpanded}
         OnCancelHandle={eh_close_button}
-        header="Login required!"
+        header={messagebox.title}
         contentClass="modal_content"
         footerClass="modal_actions"
         // footer={<Button onClick={eh_close_button}>Close</Button>}
       >
         <div className="message-box">
           <div className="text">
-            <span>Dear user, Authentication needed! You have to login first.</span>
+            <span>{messagebox.message}</span>
           </div>
           <div className="buttons">
             <Button id="btn_ok" onClick={eh_close_button}>

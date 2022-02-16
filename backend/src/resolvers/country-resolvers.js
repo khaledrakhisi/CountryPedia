@@ -21,6 +21,7 @@ const getCountryByName = async (args) => {
 
       countries.push({
         id: index,
+        name: element.name.common,
         fullName: element.name.official,
         population: element.population,
         currencies,

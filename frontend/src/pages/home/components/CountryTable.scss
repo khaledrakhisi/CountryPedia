@@ -50,4 +50,8 @@
 
     margin: 5px auto;
   }
+
+  &:not(:last-child){
+    border-bottom: 2px solid red;
+  }
 }

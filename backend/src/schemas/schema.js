@@ -16,6 +16,7 @@ var schema = buildSchema(`
     
     type Country {
         id: Int!
+        name: String!
         fullName: String!
         population: Int!
         currencies: [Currency]

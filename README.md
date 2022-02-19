@@ -8,3 +8,5 @@ This software is powered by https://restcountries.com and https://freecurrencyap
 
 Tech stack: #react, typescript, javascript, qraphql, node.js, sass, ...
 
+Run : npm start
+

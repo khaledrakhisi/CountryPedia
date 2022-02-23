@@ -59,6 +59,7 @@ const Signin: React.FunctionComponent<IProps> = ({ history }) => {
       });
 
       history.push("/");
+      
     } catch (error) {
       console.error(error);
     }
